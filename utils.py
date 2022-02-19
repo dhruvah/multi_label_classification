@@ -49,7 +49,7 @@ class ARGS(object):
     # set this to value >0 if you wish to save every x epochs
     save_freq=-1
     # set true if using GPU during training
-    use_cuda = False
+    use_cuda = True
     # input size
     inp_size = 224
 
@@ -124,12 +124,24 @@ def eval_dataset_map(model, device, test_loader):
          AP (list): Average Precision for all classes
          MAP (float): mean average precision
     """
+    gt = []
+    pred = []
+    valid = []
+    
+    model = model.to(device)
     with torch.no_grad():
         for data, target, wgt in test_loader:
             # TODO Q1.3: insert your code here
-            gt, pred, valid = None, None, None
-            pass
-    AP = compute_ap(gt, pred, valid)
+            data, target, wgt = data.to(device), target.to(device), wgt.to(device)
 
-    mAP = np.mean(AP)
+            output = model(data)
+            pred.append(output.detach().cpu().numpy())
+            gt.append(target.detach().cpu().numpy())
+            valid.append(wgt.detach().cpu().numpu())
+    
+        gt, pred, valid = np.concatenate(gt), np.concatenate(pred), np.concatenate(valid)
+            
+        AP = compute_ap(gt, pred, valid)
+
+        mAP = np.mean(AP)
     return AP, mAP

@@ -37,6 +37,9 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
     model.train()
     model = model.to(args.device)
 
+    #Loss Function
+    loss_fn = torch.nn.MultiLabelSoftMarginLoss()
+
     cnt = 0
     for epoch in range(args.epochs):
         for batch_idx, (data, target, wgt) in enumerate(train_loader):
@@ -47,7 +50,7 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
             output = model(data)
             # Calculate the loss
             # TODO Q1.4: your loss for multi-label classification
-            loss = 0
+            loss = loss_fn(output*wgt, wgt*target)
             # Calculate gradient w.r.t the loss
             loss.backward()
             # Optimizer takes one step
