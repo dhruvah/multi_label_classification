@@ -74,6 +74,7 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
                 # TODO Q1.5: Log MAP to tensorboard
                 writer.add_scalar('MAP/validation', map, cnt)
                 model.train()
+                print("Validation MAP = ", map)
             cnt += 1
 
         # TODO Q3.2: Log Learning rate
