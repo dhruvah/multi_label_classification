@@ -101,6 +101,7 @@ def compute_ap(gt, pred, valid, average=None):
         AP (list): average precision for all classes
     """
     nclasses = gt.shape[1]
+    print(gt.shape, pred.shape, valid.shape)
     AP = []
     for cid in range(nclasses):
         gt_cls = gt[:, cid][valid[:, cid] > 0].astype('float32')
@@ -133,14 +134,15 @@ def eval_dataset_map(model, device, test_loader):
         for data, target, wgt in test_loader:
             # TODO Q1.3: insert your code here
             data, target, wgt = data.to(device), target.to(device), wgt.to(device)
+            # gt = target.detach().cpu().numpy()
 
             output = model(data)
             pred.append(output.detach().cpu().numpy())
             gt.append(target.detach().cpu().numpy())
-            valid.append(wgt.detach().cpu().numpu())
+            valid.append(wgt.detach().cpu().numpy())
     
         gt, pred, valid = np.concatenate(gt), np.concatenate(pred), np.concatenate(valid)
-            
+        print(np.shape(gt))    
         AP = compute_ap(gt, pred, valid)
 
         mAP = np.mean(AP)

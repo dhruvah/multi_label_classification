@@ -5,6 +5,9 @@
 from __future__ import print_function
 
 import torch
+import torchvision
+from torch.utils.tensorboard import SummaryWriter
+from torchvision import datasets, transforms
 import numpy as np
 
 import utils
@@ -28,6 +31,8 @@ def save_model(epoch, model_name, model):
 
 def train(args, model, optimizer, scheduler=None, model_name='model'):
     # TODO Q1.5: Initialize your tensorboard writer here!
+    writer = SummaryWriter()
+
     train_loader = utils.get_data_loader(
         'voc', train=True, batch_size=args.batch_size, split='trainval', inp_size=args.inp_size)
     test_loader = utils.get_data_loader(
@@ -58,6 +63,7 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
             # Log info
             if cnt % args.log_every == 0:
                 # TODO Q1.5: Log training loss to tensorboard
+                writer.add_scalar('Loss/train', loss.item(), cnt)
                 print('Train Epoch: {} [{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, cnt, 100. * batch_idx / len(train_loader), loss.item()))
                 # TODO Q3.2: Log histogram of gradients
@@ -66,6 +72,7 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
                 model.eval()
                 ap, map = utils.eval_dataset_map(model, args.device, test_loader)
                 # TODO Q1.5: Log MAP to tensorboard
+                writer.add_scalar('MAP/validation', map, cnt)
                 model.train()
             cnt += 1
 
