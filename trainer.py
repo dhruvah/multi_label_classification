@@ -26,7 +26,7 @@ def save_model(epoch, model_name, model):
     # TODO: Q2.2 Implement code for model saving
     filename = 'checkpoint-{}-epoch{}.pth'.format(
         model_name, epoch+1)
-    pass
+    torch.save(model.state_dict(), filename)
 
 
 def train(args, model, optimizer, scheduler=None, model_name='model'):
@@ -67,7 +67,9 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
                 print('Train Epoch: {} [{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch, cnt, 100. * batch_idx / len(train_loader), loss.item()))
                 # TODO Q3.2: Log histogram of gradients
-                writer.add_histogram('conv1.weight', model.conv1.weight, epoch)
+                # writer.add_histogram('conv1.weight', model.conv1.weight, epoch) #correct this
+                for name, param in model.named_parameters():
+                    writer.add_histogram(name, param.grad, cnt)
 
             # Validation iteration
             if cnt % args.val_every == 0:
