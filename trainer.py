@@ -85,7 +85,7 @@ def train(args, model, optimizer, scheduler=None, model_name='model'):
         if scheduler is not None:
             scheduler.step()
             my_lr = scheduler.optimizer.param_groups[0]['lr']
-            writer.add_scalar('Learning Rate', my_lr, cnt)
+            writer.add_scalar('Learning Rate', my_lr, epoch)
 
         # save model
         if save_this_epoch(args, epoch):

@@ -92,18 +92,18 @@ class VOCDataset(Dataset):
         if 'train' in self.split:
             transform = transforms.Compose([
                 transforms.Resize((self.size, self.size)),
-                # tramsforms.RandomResizedCrop(self.size),
-                # transforms.RandomHorizontalFlip(),
+                transforms.RandomResizedCrop(self.size),
+                transforms.RandomHorizontalFlip(),
                 # transforms.CenterCrop(11),
                 transforms.ToTensor(),
-                # transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+                transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
             ])
         elif 'test' in self.split:
             transform = transforms.Compose([
             transforms.Resize((self.size, self.size)),
         #   transforms.CenterCrop(11),
             transforms.ToTensor(),
-        #   transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
+            transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
             ])
  
         image = torch.FloatTensor(transform(img))
